@@ -130,6 +130,12 @@ terraform {
 }
 ```
 
+### tfenv build [version]
+
+Hashicorp only began distributing packages for Darwin running on Apple silicon
+starting with version 1.0.2. To facilitate installing older versions of
+Terraform, the build command will install from source.
+
 ### Environment Variables
 
 #### TFENV
@@ -177,12 +183,14 @@ Set the debug level for TFENV.
 
 ##### `TFENV_REMOTE`
 
-String (Default: https://releases.hashicorp.com)
+String (Default: https://releases.hashicorp.com for install, github.com/hashicorp/terraform for build)
 
-To install from a remote other than the default
+To install or build from a remote other than the default
 
 ```console
 $ TFENV_REMOTE=https://example.jfrog.io/artifactory/hashicorp
+
+$ TFENV_REMOTE=github.com/myorg/terraform
 ```
 
 ##### `TFENV_CONFIG_DIR`
