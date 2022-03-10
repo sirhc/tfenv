@@ -97,7 +97,11 @@ mkdir -p "${cache_path}" || log 'error' "Failed to make directory ${cache_path}"
 
 export GOPATH="${cache_path}"
 
-go install "${version_url}" || log 'error' 'Build failed';
+{
+    go get "${version_url}";
+    cd "${cache_path}/pkg/mod/${version_url}";
+    go install .
+} || log 'error' 'Build failed';
 
 mkdir -p "${dst_path}" || log 'error' "Failed to make directory ${dst_path}";
 cp "${cache_path}/bin/terraform" "${dst_path}/." || log 'error' 'Build failed';
