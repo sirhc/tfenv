@@ -90,7 +90,7 @@ log 'info' "Building Terraform v${version}";
 if [ -n "${XDG_CACHE_HOME:-""}" ]; then
     cache_path="${XDG_CACHE_HOME}/tfenv"
 else
-    cache_path="${HOME}/.config/tfenv"
+    cache_path="${HOME}/.cache/tfenv"
 fi
 
 mkdir -p "${cache_path}" || log 'error' "Failed to make directory ${cache_path}";
