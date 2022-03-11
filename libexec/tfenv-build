@@ -100,7 +100,12 @@ export GOPATH="${cache_path}"
 {
     go get "${version_url}";
     cd "${cache_path}/pkg/mod/${version_url}";
-    go install .
+    chmod 0644 go.mod
+    if [ -d 'vendor' ]; then
+      chmod 0755 . vendor
+      go mod vendor
+    fi
+    go install .;
 } || log 'error' 'Build failed';
 
 mkdir -p "${dst_path}" || log 'error' "Failed to make directory ${dst_path}";
