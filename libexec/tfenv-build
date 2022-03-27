@@ -98,17 +98,23 @@ mkdir -p "${cache_path}" || log 'error' "Failed to make directory ${cache_path}"
 export GOPATH="${cache_path}"
 
 {
-    go get "${version_url}";
+  if ! go install "${version_url}" 2>/dev/null; then
+    set -e
     cd "${cache_path}/pkg/mod/${version_url}";
-    chmod 0644 go.mod
-    if [ -d 'vendor' ]; then
-      chmod 0755 . vendor
-      go mod vendor
+    chmod u+w . go.mod go.sum;
+    if [ -d vendor ]; then
+      chmod u+w vendor vendor/modules.txt;
     fi
+    # In case we're using goenv.
+    rm -f .go-version
+    # Older version of this gives build error.
+    go get golang.org/x/sys/unix;
+    go mod vendor;
     go install .;
+  fi
 } || log 'error' 'Build failed';
 
 mkdir -p "${dst_path}" || log 'error' "Failed to make directory ${dst_path}";
-cp "${cache_path}/bin/terraform" "${dst_path}/." || log 'error' 'Build failed';
+mv "${cache_path}/bin/terraform" "${dst_path}/." || log 'error' 'Build failed';
 
 log 'info' "Installation of terraform v${version} successful. To make this your default version, run 'tfenv use ${version}'";
